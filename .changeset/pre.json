@@ -1,0 +1,9 @@
+{
+  "mode": "exit",
+  "tag": "next",
+  "initialVersions": {
+    "desing-system": "0.0.0"
+  },
+  "changesets": [
+  ]
+}

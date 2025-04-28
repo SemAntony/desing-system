@@ -1,0 +1,50 @@
+name: Release Package
+
+on:
+  push:
+    branches:
+      - main
+      - 'feature/**'
+      - 'fix/**'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Check Changeset Status
+        run: pnpm changeset status
+
+
+      - name: Lint Code
+        run: pnpm lint
+
+      - name: Build Project
+        run: pnpm build
+
+      - name: Create Release Pull Request or Publish
+        uses: changesets/action@v1
+        with:
+          publish: pnpm release
+          commit: "chore: release new version"
+          title: "chore: release new version"
+          createGithubReleases: true
+        env:
+          NPM_TOKEN: ${{ secrets.D }}
+          GITHUB_TOKEN: ${{ secrets.DESING_SYSTEM_NPM_PUBLISH_TOKEN }}
